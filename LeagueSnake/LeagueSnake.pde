@@ -37,7 +37,7 @@ ArrayList<Segment> tail = new ArrayList<Segment>();
 void setup() {
 size(500,500);
   head = new Segment(50,50);
-  frameRate(20);
+  frameRate(15);
   dropFood();
 }
 
@@ -72,6 +72,7 @@ void drawSnake() {
   //Draw the head of the snake followed by its tail
   fill(#FFFFFF);
   rect(head.cornerX, head.cornerY, 10,10);
+  manageTail();
 }
 
 
@@ -82,11 +83,13 @@ void drawSnake() {
 
 void drawTail() {
   //Draw each segment of the tail
-  Segment s = new Segment(head.cornerX, head.cornerY);
-  rect(s.cornerX, s.cornerY, 10, 10);
-  tail.add(s);
+  
+  for(int i=0; i<tail.size(); i++){
+    
+    rect(tail.get(i).cornerX, tail.get(i).cornerY, 10 ,10);
   
 
+}
 }
 
 void manageTail() {
@@ -94,7 +97,9 @@ void manageTail() {
   //This produces the illusion of the snake tail moving.
   checkTailCollision();
   drawTail();
-  rect(head.cornerX, head.cornerY, 10, 10);
+  Segment tailpart = new Segment(head.cornerX,head.cornerY);
+  tail.add(tailpart);
+  tail.remove(0);
   
   
   
@@ -107,10 +112,14 @@ void manageTail() {
 
 void checkTailCollision() {
   //If the snake crosses its own tail, shrink the tail back to one segment
-  if(head.cornerX==tail.cornerX && head.cornerY==tail.cornerY){
+  for(int i=0; i<tail.size(); i++){
+  if(head.cornerX==tail.get(i).cornerX && head.cornerY==tail.get(i).cornerY){
   foodPieces = 1;
-  ArrayList<Segment> tail = new ArrayList<Segment>();
+  tail = new ArrayList<Segment>();
+  Segment head2 = new Segment(head.cornerX, head.cornerY);
+  tail.add(head2);
   
+  }
   }
 }
 
@@ -146,19 +155,19 @@ void move() {
   switch(direction) {
   case UP:
     // move head up here
-    head.cornerY-=5;
+    head.cornerY-=10;
     break;
   case DOWN:
     // move head down here
-    head.cornerY+=5;
+    head.cornerY+=10;
     break;
   case LEFT:
    // figure it out 
-   head.cornerX-=5;
+   head.cornerX-=10;
     break;
   case RIGHT:
     // mystery code goes here 
-    head.cornerX+=5;
+    head.cornerX+=10;
     break;
   }
   checkBoundaries();
@@ -188,6 +197,8 @@ void eat() {
   if(head.cornerX==foodX && head.cornerY==foodY) {
     foodPieces++;
     dropFood();
+    Segment tailpart2 = new Segment(head.cornerX, head.cornerY);
+    tail.add(tailpart2);
   }
 
 }
